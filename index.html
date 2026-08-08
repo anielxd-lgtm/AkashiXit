@@ -2,173 +2,1136 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <!-- LÍNEA CLAVE PARA RESPONSIVIDAD MÓVIL -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página en Mantenimiento | Akashi Xit</title>
+    <title>AKASHI XIT | ELITE CORE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Inter:wght@300;500;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* Protecciones contra selección de texto y arrastre */
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            -webkit-user-drag: none;
+        :root {
+            --accent: #8a2be2;
+            --accent-glow: rgba(138, 43, 226, 0.4);
+            --bg: #050508;
+            --glass: rgba(255, 255, 255, 0.03);
         }
 
-        body {
-            background: linear-gradient(135deg, #090d16, #17153b, #2b0b3a);
-            color: #ffffff;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow-x: hidden;
-            text-align: center;
-            padding: 20px;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; user-select: none; -webkit-user-select: none; }
+
+        .glow { position: fixed; width: 400px; height: 400px; background: var(--accent-glow); filter: blur(150px); z-index: -1; border-radius: 50%; }
+
+        nav { padding: 25px 5%; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        
+        .logo-container { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-img { width: 40px; height: 40px; object-fit: contain; border-radius: 10px; border: 1px solid var(--accent); box-shadow: 0 0 15px var(--accent-glow); pointer-events: none; }
+        .logo { font-family: 'Rajdhani'; font-size: 26px; font-weight: 700; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; }
+        
+        .nav-right { display: flex; align-items: center; gap: 15px; }
+        .lang-btn { background: transparent; border: 1px solid var(--accent); color: #fff; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-family: 'Rajdhani'; font-weight: 700; transition: 0.3s; }
+        .lang-btn:hover { background: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
+
+        .hero { min-height: 45vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 40px 20px; }
+        
+        .hero-logo { width: 80px; height: 80px; object-fit: contain; margin-bottom: 20px; border-radius: 20px; border: 2px solid var(--accent); box-shadow: 0 0 30px var(--accent-glow); pointer-events: none; }
+        
+        .hero h1 { font-family: 'Rajdhani'; font-size: clamp(45px, 8vw, 90px); line-height: 1; margin-bottom: 20px; }
+        .hero h1 span { color: var(--accent); text-shadow: 0 0 30px var(--accent-glow); }
+        .hero p { color: #888; max-width: 600px; margin-bottom: 40px; font-weight: 300; padding: 0 15px; font-size: 14px; }
+
+        .btn-premium { padding: 15px 35px; background: transparent; border: 1px solid var(--accent); color: #fff; font-weight: 700; text-transform: uppercase; cursor: pointer; transition: 0.4s; border-radius: 50px; text-decoration: none; display: inline-block; text-align: center; font-size: 14px; }
+        .btn-premium:hover { background: var(--accent); box-shadow: 0 0 40px var(--accent-glow); }
+
+        .section-title { font-family: 'Rajdhani'; font-size: clamp(28px, 5vw, 40px); text-align: center; margin-bottom: 30px; color: #fff; letter-spacing: 2px; text-transform: uppercase; padding: 0 15px; }
+        .container { padding: 0 5% 50px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; max-width: 1300px; margin: 0 auto; }
+        
+        .product-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); padding: 30px 20px; border-radius: 30px; transition: 0.4s ease; backdrop-filter: blur(10px); text-align: center; position: relative; }
+        .product-card:hover { border-color: var(--accent); transform: translateY(-5px); box-shadow: 0 0 30px var(--accent-glow), inset 0 0 15px rgba(138, 43, 226, 0.2); }
+        
+        .product-status { font-size: 11px; letter-spacing: 2px; margin-bottom: 15px; text-transform: uppercase; font-weight: 600; }
+        
+        .price-list { list-style: none; margin: 20px 0; color: #aaa; }
+        .price-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
+
+        /* SECCIÓN DE GALERÍA FLOTANTE / APARTADO MODAL DE GALERÍA */
+        #galleryModal { display: none; position: fixed; inset: 0; background: rgba(5, 5, 8, 0.96); z-index: 2500; justify-content: center; align-items: center; backdrop-filter: blur(20px); padding: 20px 4%; overflow-y: auto; }
+        .gallery-modal-box { width: 100%; max-width: 1300px; margin: auto; animation: fadeIn 0.4s ease; }
+        .gallery-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; flex-wrap: wrap; gap: 15px; }
+        
+        .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+        .portfolio-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); border-radius: 25px; overflow: hidden; backdrop-filter: blur(10px); transition: 0.4s ease; position: relative; cursor: pointer; }
+        .portfolio-card:hover { border-color: var(--accent); transform: translateY(-5px); box-shadow: 0 0 30px var(--accent-glow); }
+        
+        .portfolio-img-box { width: 100%; height: 200px; background: rgba(0,0,0,0.5); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .portfolio-img-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s ease; pointer-events: none; }
+        .portfolio-card:hover .portfolio-img-box img { transform: scale(1.08); }
+        
+        .portfolio-overlay { position: absolute; inset: 0; background: rgba(5, 5, 8, 0.6); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.3s ease; }
+        .portfolio-card:hover .portfolio-overlay { opacity: 1; }
+        .portfolio-overlay i { font-size: 30px; color: var(--accent); text-shadow: 0 0 15px var(--accent); }
+
+        .portfolio-info { padding: 20px; }
+        .portfolio-tag { display: inline-block; font-size: 10px; background: rgba(138, 43, 226, 0.2); border: 1px solid var(--accent); padding: 4px 12px; border-radius: 20px; color: #d4a5ff; font-weight: 600; text-transform: uppercase; margin-bottom: 8px; }
+        .portfolio-info h3 { font-family: 'Rajdhani'; font-size: 20px; color: #fff; margin-bottom: 6px; letter-spacing: 1px; }
+        .portfolio-info p { color: #aaa; font-size: 12px; line-height: 1.5; }
+
+        /* MODAL LIGHTBOX PARA VER IMAGEN EN GRANDE */
+        #lightboxModal { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.95); z-index: 3000; justify-content: center; align-items: center; backdrop-filter: blur(15px); padding: 15px; }
+        .lightbox-content { position: relative; max-width: 900px; width: 100%; text-align: center; }
+        .lightbox-content img { width: 100%; max-height: 75vh; object-fit: contain; border-radius: 15px; border: 1px solid var(--accent); box-shadow: 0 0 50px var(--accent-glow); pointer-events: none; }
+        .lightbox-close { position: absolute; top: -45px; right: 0; background: transparent; border: 1px solid var(--accent); color: #fff; width: 38px; height: 38px; border-radius: 50%; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+        .lightbox-close:hover { background: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
+        .lightbox-caption { margin-top: 15px; font-family: 'Rajdhani'; font-size: 18px; color: #fff; letter-spacing: 1px; padding: 0 10px; }
+
+        /* SECCIÓN DE GUÍA RÁPIDA / CÓMO COMPRAR */
+        .guide-section { padding: 30px 5% 50px; max-width: 1200px; margin: 0 auto; }
+        .guide-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .guide-step-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); padding: 30px 20px; border-radius: 25px; text-align: center; backdrop-filter: blur(10px); transition: 0.3s; position: relative; overflow: hidden; }
+        .guide-step-card:hover { border-color: var(--accent); transform: translateY(-5px); box-shadow: 0 0 25px var(--accent-glow); }
+        .guide-number { position: absolute; top: 15px; right: 20px; font-family: 'Rajdhani'; font-size: 35px; font-weight: 700; color: rgba(255,255,255,0.05); }
+        .guide-icon { width: 60px; height: 60px; background: rgba(138, 43, 226, 0.1); border: 1px solid var(--accent); border-radius: 18px; display: flex; justify-content: center; align-items: center; margin: 0 auto 15px; font-size: 24px; color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
+        .guide-step-card h3 { font-family: 'Rajdhani'; font-size: 20px; margin-bottom: 10px; color: #fff; letter-spacing: 1px; }
+        .guide-step-card p { color: #aaa; font-size: 12px; line-height: 1.6; }
+
+        /* Sección de Preguntas Frecuentes (FAQ) */
+        .faq-section { padding: 30px 5% 50px; max-width: 900px; margin: 0 auto; }
+        .faq-item { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; margin-bottom: 12px; overflow: hidden; backdrop-filter: blur(10px); transition: 0.3s; }
+        .faq-item:hover { border-color: var(--accent); }
+        .faq-question { padding: 18px 20px; font-family: 'Rajdhani'; font-size: 18px; font-weight: 700; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+        .faq-answer { padding: 0 20px 18px; color: #aaa; font-size: 13px; line-height: 1.6; display: none; }
+
+        /* Panel de Reseñas */
+        .reviews-trigger-section { padding: 20px 5% 60px; text-align: center; }
+        .reviews-panel-trigger { background: var(--glass); border: 1px solid var(--accent); padding: 30px 20px; border-radius: 30px; backdrop-filter: blur(10px); max-width: 800px; margin: 0 auto; box-shadow: 0 0 30px var(--accent-glow); transition: 0.3s; }
+        .reviews-panel-trigger:hover { transform: translateY(-5px); box-shadow: 0 0 50px var(--accent-glow); }
+        .reviews-panel-trigger h3 { font-family: 'Rajdhani'; font-size: clamp(24px, 4vw, 32px); margin-bottom: 12px; color: #fff; letter-spacing: 2px; }
+        .reviews-panel-trigger p { color: #aaa; font-size: 13px; margin-bottom: 20px; }
+
+        .reviews-full-panel { display: none; padding: 30px 5% 60px; max-width: 1200px; margin: 0 auto; animation: fadeIn 0.4s ease; }
+        .reviews-full-panel.active { display: block; }
+
+        .panel-header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px; }
+        .reviews-tabs { display: flex; justify-content: center; gap: 12px; margin-bottom: 30px; flex-wrap: wrap; }
+        .tab-btn { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); color: #aaa; padding: 10px 22px; border-radius: 30px; cursor: pointer; font-family: 'Rajdhani'; font-size: 16px; font-weight: 700; transition: 0.3s; backdrop-filter: blur(10px); }
+        .tab-btn:hover { border-color: var(--accent); color: #fff; }
+        .tab-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 0 20px var(--accent-glow); }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+        .review-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); padding: 22px; border-radius: 20px; backdrop-filter: blur(10px); transition: 0.3s; }
+        .review-card:hover { border-color: var(--accent); transform: translateY(-5px); box-shadow: 0 0 20px var(--accent-glow); }
+        .review-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .review-user { font-family: 'Rajdhani'; font-size: 17px; font-weight: 700; color: #fff; }
+        .review-stars { color: #ffaa00; font-size: 11px; }
+        .review-text { color: #aaa; font-size: 13px; line-height: 1.6; margin-bottom: 12px; }
+        .review-tag { display: inline-block; font-size: 10px; background: rgba(138, 43, 226, 0.2); border: 1px solid var(--accent); padding: 3px 10px; border-radius: 20px; color: #d4a5ff; font-weight: 600; text-transform: uppercase; }
+
+        .review-form-box { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); padding: 25px 20px; border-radius: 25px; backdrop-filter: blur(10px); max-width: 700px; margin: 0 auto; text-align: center; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+        .review-form-box h3 { font-family: 'Rajdhani'; font-size: 22px; margin-bottom: 15px; color: #fff; letter-spacing: 1px; }
+        .form-group { margin-bottom: 16px; text-align: left; }
+        .form-group label { display: block; font-size: 11px; color: #aaa; margin-bottom: 6px; text-transform: uppercase; font-weight: 600; font-family: 'Rajdhani'; }
+        .form-control { width: 100%; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); padding: 12px 15px; border-radius: 12px; color: #fff; font-family: 'Inter', sans-serif; font-size: 14px; transition: 0.3s; }
+        .form-control:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
+        textarea.form-control { resize: vertical; height: 90px; }
+
+        .star-rating { display: flex; gap: 8px; font-size: 22px; color: #444; cursor: pointer; margin-bottom: 15px; justify-content: center; }
+        .star-rating .fa-star.active { color: #ffaa00; text-shadow: 0 0 10px rgba(255, 170, 0, 0.5); }
+        
+        /* Sistema de Notificaciones Elegantes Estilo Toast */
+        #toast-container { position: fixed; bottom: 20px; left: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; max-width: 360px; }
+        @media (min-width: 480px) {
+            #toast-container { right: auto; }
         }
+        .akashi-toast { background: rgba(12, 12, 18, 0.95); border: 1px solid var(--accent); padding: 14px 18px; border-radius: 16px; backdrop-filter: blur(15px); box-shadow: 0 10px 30px rgba(138, 43, 226, 0.35); display: flex; align-items: center; gap: 12px; pointer-events: auto; animation: toastSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), toastFadeOut 0.4s ease 4.2s forwards; position: relative; overflow: hidden; width: 100%; }
+        .akashi-toast::before { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 4px; background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+        .akashi-toast.success::before { background: #00ff6a; box-shadow: 0 0 10px #00ff6a; }
+        .akashi-toast.warning::before { background: #ffaa00; box-shadow: 0 0 10px #ffaa00; }
+        .akashi-toast.error::before { background: #ff3333; box-shadow: 0 0 10px #ff3333; }
+        
+        .akashi-toast-icon { width: 32px; height: 32px; background: rgba(138, 43, 226, 0.15); border: 1px solid var(--accent); border-radius: 9px; display: flex; justify-content: center; align-items: center; font-size: 14px; color: var(--accent); flex-shrink: 0; box-shadow: 0 0 10px var(--accent-glow); }
+        .akashi-toast.success .akashi-toast-icon { border-color: #00ff6a; color: #00ff6a; background: rgba(0, 255, 106, 0.1); box-shadow: 0 0 10px rgba(0, 255, 106, 0.3); }
+        .akashi-toast.warning .akashi-toast-icon { border-color: #ffaa00; color: #ffaa00; background: rgba(255, 170, 0, 0.1); box-shadow: 0 0 10px rgba(255, 170, 0, 0.3); }
 
-        .container {
-            max-width: 650px;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 50px 40px;
-            border-radius: 24px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-            animation: fadeIn 1s ease-in-out;
-        }
+        .akashi-toast-content h4 { font-family: 'Rajdhani'; font-size: 15px; color: #fff; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 2px; }
+        .akashi-toast-content p { font-size: 11px; color: #aaa; line-height: 1.4; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes toastSlideIn { from { transform: translateX(-120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes toastFadeOut { to { opacity: 0; transform: translateY(10px); visibility: hidden; } }
 
-        /* Estilo para el Logo */
-        .logo-container {
-            margin-bottom: 25px;
-        }
+        /* Contenedor flotante para los botones en la esquina inferior derecha */
+        .floating-buttons { position: fixed; bottom: 20px; right: 20px; z-index: 999; display: flex; flex-direction: column; gap: 12px; align-items: flex-end; }
+        
+        .gallery-float { background: var(--glass); border: 1px solid var(--accent); color: white; padding: 10px 18px; border-radius: 30px; display: flex; align-items: center; gap: 8px; font-family: 'Rajdhani'; font-size: 15px; font-weight: 700; box-shadow: 0 5px 20px var(--accent-glow); transition: 0.3s; text-decoration: none; backdrop-filter: blur(10px); cursor: pointer; }
+        .gallery-float:hover { background: var(--accent); transform: scale(1.05); box-shadow: 0 8px 30px var(--accent-glow); }
 
-        .logo-container img {
-            max-height: 80px;
-            width: auto;
-            object-fit: contain;
-            pointer-events: none; /* Evita arrastrar o interactuar directamente con la imagen */
-        }
+        .discord-float { background: #5865F2; color: white; width: 52px; height: 52px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 26px; box-shadow: 0 5px 20px rgba(88, 101, 242, 0.4); transition: 0.3s; text-decoration: none; }
+        .discord-float:hover { transform: scale(1.1); box-shadow: 0 8px 30px rgba(88, 101, 242, 0.7); }
 
-        .badge {
-            background: linear-gradient(90deg, #6366f1, #a855f7);
-            color: white;
-            padding: 6px 18px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            border-radius: 50px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            display: inline-block;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
-        }
+        #paymentModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
+        .modal-content { background: #111; border: 1px solid var(--accent); padding: 30px 20px; border-radius: 20px; text-align: center; max-width: 400px; width: 100%; }
+        
+        /* ESTILOS DEL PANEL DE ADMINISTRACIÓN */
+        #adminModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 5, 8, 0.95); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(15px); padding: 20px; }
+        .admin-box { background: rgba(15, 15, 22, 0.9); border: 1px solid var(--accent); padding: 30px 20px; border-radius: 25px; width: 100%; max-width: 500px; box-shadow: 0 0 50px var(--accent-glow); text-align: center; }
+        .admin-box h2 { font-family: 'Rajdhani'; font-size: clamp(24px, 4vw, 32px); color: var(--accent); margin-bottom: 15px; letter-spacing: 2px; }
+        .admin-product-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 12px 15px; border-radius: 12px; margin-bottom: 12px; gap: 10px; }
+        .admin-product-row span { font-family: 'Rajdhani'; font-size: 16px; font-weight: 700; }
+        .admin-select { background: #000; border: 1px solid var(--accent); color: #fff; padding: 6px 10px; border-radius: 8px; font-family: 'Rajdhani'; font-weight: 700; cursor: pointer; outline: none; font-size: 14px; }
 
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            background: linear-gradient(90deg, #ffffff, #cbd5e1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        footer { padding: 30px 20px; text-align: center; color: #444; font-size: 11px; letter-spacing: 3px; border-top: 1px solid #111; }
+        footer a { color: #444; text-decoration: none; transition: 0.3s; }
+        footer a:hover { color: var(--accent); }
 
-        p {
-            color: #94a3b8;
-            font-size: 1.1rem;
-            line-height: 1.7;
-            margin-bottom: 35px;
-        }
-
-        .footer-note {
-            font-size: 0.85rem;
-            color: #64748b;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding-top: 25px;
-        }
-
-        /* DISEÑO RESPONSIVO PARA TELÉFONOS */
-        @media (max-width: 480px) {
-            body {
-                padding: 15px;
-            }
-
-            .container {
-                padding: 30px 20px;
-                border-radius: 18px;
-            }
-
-            .logo-container img {
-                max-height: 60px;
-            }
-
-            h1 {
-                font-size: 1.8rem;
-            }
-
-            p {
-                font-size: 1rem;
-                margin-bottom: 25px;
-            }
+        /* Ajustes específicos responsivos adicionales para celulares pequeños */
+        @media (max-width: 600px) {
+            nav { padding: 20px 4%; justify-content: center; }
+            .hero { padding: 20px 10px; }
+            .floating-buttons { bottom: 15px; right: 15px; }
+            .gallery-float { padding: 8px 14px; font-size: 13px; }
+            .discord-float { width: 45px; height: 45px; font-size: 22px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <!-- Logo de la tienda -->
-        <div class="logo-container">
-            <img src="AKASHIII.png" alt="Logo de la tienda">
-        </div>
+    <div class="glow" style="top: -100px; left: -100px;"></div>
+    <div class="glow" style="bottom: -100px; right: -100px;"></div>
 
-        <div class="badge">Página en Mantenimiento</div>
-        <h1>Estamos mejorando para ti</h1>
-        <p>Estamos trabajando tras bambalinas para ofrecerte una experiencia superior, más rápida y completamente renovada. Muy pronto abriremos con sorpresas y las mejores soluciones preparadas especialmente para ti.</p>
-        
-        <div class="footer-note">
-            &copy; 2026 Akashi Xit. Todos los derechos reservados.
+    <!-- Contenedor para notificaciones estilo Toast -->
+    <div id="toast-container"></div>
+
+    <div class="floating-buttons">
+        <!-- BOTÓN DE GALERÍA FLOTANTE (Abre el apartado modal con las 3 imágenes) -->
+        <button onclick="openGalleryModal()" class="gallery-float" id="t-btn-galeria"><i class="fas fa-images"></i> Galería</button>
+        <a href="https://discord.gg/cbFmuhmGH7" target="_blank" class="discord-float" title="Únete a nuestro Discord">
+            <i class="fab fa-discord"></i>
+        </a>
+    </div>
+
+    <!-- APARTADO MODAL DE GALERÍA -->
+    <div id="galleryModal">
+        <div class="gallery-modal-box">
+            <div class="gallery-modal-header">
+                <h2 class="section-title" id="t-portfolio-title" style="margin-bottom: 0; font-size: clamp(22px, 4vw, 32px); text-align: left;">GALERÍA DE OPERACIÓN</h2>
+                <button class="btn-premium" onclick="closeGalleryModal()" style="padding: 8px 20px; font-size: 13px;" id="t-close-gallery">CERRAR</button>
+            </div>
+            <div class="portfolio-grid">
+                
+                <div class="portfolio-card" onclick="openLightbox('Bypass.png', 'Akashi Bypass - En Pantalla y Funcionando')">
+                    <div class="portfolio-img-box">
+                        <img src="Bypass.png" alt="Bypass Funcionando">
+                        <div class="portfolio-overlay"><i class="fas fa-search-plus"></i></div>
+                    </div>
+                    <div class="portfolio-info">
+                        <span class="portfolio-tag" id="t-tag-1">Bypass Elite</span>
+                        <h3 id="t-port-1-title">Bypass en Juego</h3>
+                        <p id="t-port-1-desc">Visualización de estabilidad y rendimiento óptimo en partida con cero lag.</p>
+                    </div>
+                </div>
+
+                <div class="portfolio-card" onclick="openLightbox('AKASHIBASIC.png', 'Panel de Control Principal - Akashi Loader')">
+                    <div class="portfolio-img-box">
+                        <img src="AKASHIBASIC.png" alt="Panel de Control">
+                        <div class="portfolio-overlay"><i class="fas fa-search-plus"></i></div>
+                    </div>
+                    <div class="portfolio-info">
+                        <span class="portfolio-tag" id="t-tag-2">Software Interface</span>
+                        <h3 id="t-port-2-title">Akashi Basic</h3>
+                        <p id="t-port-2-desc">Diseño limpio, futurista y fácil de usar para activar tus llaves al instante.</p>
+                    </div>
+                </div>
+
+                <div class="portfolio-card" onclick="openLightbox('BRMODS.png', 'BR Mods & Funciones Avanzadas')">
+                    <div class="portfolio-img-box">
+                        <img src="BRMODS.png" alt="BR Mods">
+                        <div class="portfolio-overlay"><i class="fas fa-search-plus"></i></div>
+                    </div>
+                    <div class="portfolio-info">
+                        <span class="portfolio-tag" id="t-tag-3">BR Mods</span>
+                        <h3 id="t-port-3-title">BR Mods</h3>
+                        <p id="t-port-3-desc">Herramientas avanzadas configuradas para ofrecer la máxima fluidez.</p>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 
+    <nav>
+        <a href="#" class="logo-container">
+            <img src="logo.png" alt="Akashi Logo" class="logo-img">
+            <div class="logo">AKASHI XIT</div>
+        </a>
+        <div class="nav-right">
+            <div style="font-size: 11px; letter-spacing: 2px;"><span id="t-status-label">STATUS</span>: <span id="nav-global-status" style="color: #00ff6a;">ONLINE</span></div>
+            <button class="lang-btn" onclick="toggleLanguage()" id="langToggleBtn">EN</button>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <img src="logo.png" alt="Akashi Logo" class="hero-logo">
+        <h1 id="t-hero-title">AKASHI <span>XIT</span></h1>
+        <p id="t-hero-desc">Software de optimización de alto rendimiento. Privado y estable.</p>
+    </section>
+
+    <h2 class="section-title" id="t-section-title">PRODUCTOS ELITES</h2>
+
+    <div class="container">
+        <!-- BYPASS -->
+        <div class="product-card">
+            <div id="status-bypass" class="product-status">ONLINE</div>
+            <h2 style="font-family: 'Rajdhani'; margin-bottom: 15px; font-size: 24px;">BYPASS</h2>
+            <ul class="price-list">
+                <li class="price-item"><span id="t-days-7-1">7 DAYS</span> <span>$5.00</span></li>
+                <li class="price-item"><span id="t-days-15-1">15 DAYS</span> <span>$10.00</span></li>
+                <li class="price-item"><span id="t-days-30-1">30 DAYS</span> <span>$15.00</span></li>
+            </ul>
+            <button class="btn-premium btn-buy" style="width: 100%;" onclick="showModal()">PAYPAL</button>
+        </div>
+
+        <!-- BR MODS -->
+        <div class="product-card">
+            <div id="status-brmods" class="product-status">ONLINE</div>
+            <h2 style="font-family: 'Rajdhani'; margin-bottom: 15px; font-size: 24px;">BR MODS</h2>
+            <ul class="price-list">
+                <li class="price-item"><span id="t-days-7-2">7 DAYS</span> <span>$5.00</span></li>
+                <li class="price-item"><span id="t-days-15-2">15 DAYS</span> <span>$10.00</span></li>
+                <li class="price-item"><span id="t-days-30-2">30 DAYS</span> <span>$15.00</span></li>
+            </ul>
+            <button class="btn-premium btn-buy" style="width: 100%;" onclick="showModal()">PAYPAL</button>
+        </div>
+
+        <!-- AKASHI BASIC -->
+        <div class="product-card">
+            <div id="status-basic" class="product-status">ONLINE</div>
+            <h2 style="font-family: 'Rajdhani'; margin-bottom: 15px; font-size: 24px;">AKASHI BASIC</h2>
+            <ul class="price-list">
+                <li class="price-item"><span id="t-days-7-3">7 DAYS</span> <span>$5.00</span></li>
+                <li class="price-item"><span id="t-days-15-3">15 DAYS</span> <span>$10.00</span></li>
+                <li class="price-item"><span id="t-days-30-3">30 DAYS</span> <span>$15.00</span></li>
+            </ul>
+            <button class="btn-premium btn-buy" style="width: 100%;" onclick="showModal()">PAYPAL</button>
+        </div>
+    </div>
+
+    <!-- MODAL LIGHTBOX PARA VER IMAGEN EN GRANDE -->
+    <div id="lightboxModal" onclick="closeLightbox()">
+        <div class="lightbox-content" onclick="event.stopPropagation()">
+            <button class="lightbox-close" onclick="closeLightbox()"><i class="fas fa-times"></i></button>
+            <img id="lightboxImg" src="" alt="Vista Previa">
+            <div class="lightbox-caption" id="lightboxCaption"></div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN DE GUÍA RÁPIDA: CÓMO COMPRAR -->
+    <div class="guide-section">
+        <h2 class="section-title" id="t-guide-title">¿CÓMO COMPRAR?</h2>
+        <div class="guide-grid">
+            <div class="guide-step-card">
+                <span class="guide-number">01</span>
+                <div class="guide-icon"><i class="fas fa-mouse-pointer"></i></div>
+                <h3 id="t-step1-title">Elige tu Software</h3>
+                <p id="t-step1-desc">Selecciona el paquete que mejor se adapte a tus necesidades (Bypass, BR Mods o Akashi Basic) y el tiempo de duración deseado.</p>
+            </div>
+
+            <div class="guide-step-card">
+                <span class="guide-number">02</span>
+                <div class="guide-icon"><i class="fas fa-credit-card"></i></div>
+                <h3 id="t-step2-title">Realiza el Pago</h3>
+                <p id="t-step2-desc">Haz clic en el botón de PayPal para procesar tu pago de forma segura o contáctanos si deseas pagar con cuentas de Free Fire válidas.</p>
+            </div>
+
+            <div class="guide-step-card">
+                <span class="guide-number">03</span>
+                <div class="guide-icon"><i class="fas fa-key"></i></div>
+                <h3 id="t-step3-title">Recibe tu Llave</h3>
+                <p id="t-step3-desc">Envía tu comprobante de pago por nuestro canal de Discord y recibe tu clave de acceso junto con el ejecutable en cuestión de minutos.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN DE PREGUNTAS FRECUENTES (FAQ) -->
+    <div class="faq-section">
+        <h2 class="section-title" id="t-faq-title">PREGUNTAS FRECUENTES</h2>
+        
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <span id="t-faq-q1">¿Cuánto tarda en llegar la llave?</span>
+                <i class="fas fa-chevron-down" style="font-size: 14px; color: var(--accent);"></i>
+            </div>
+            <div class="faq-answer" id="t-faq-a1">
+                La entrega es completamente automatizada/semi-automatizada al instante. Una vez realizado el pago, envías tu comprobante por nuestro Discord y se te entrega tu llave en cuestión de minutos.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <span id="t-faq-q2">¿Cómo se activa el producto?</span>
+                <i class="fas fa-chevron-down" style="font-size: 14px; color: var(--accent);"></i>
+            </div>
+            <div class="faq-answer" id="t-faq-a2">
+                Recibirás un archivo ejecutable junto con una clave de acceso única. Solo debes abrir el software, introducir la llave que se te proporcionó y pulsar activar.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <span id="t-faq-q3">¿Aceptan cuentas de Free Fire como método de pago?</span>
+                <i class="fas fa-chevron-down" style="font-size: 14px; color: var(--accent);"></i>
+            </div>
+            <div class="faq-answer" id="t-faq-a3">
+                ¡Sí! También se aceptan cuentas de Free Fire de región Norte, EEUU y Sur. Consulta con nosotros mediante Discord para realizar el intercambio o validación de la cuenta.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <span id="t-faq-q4">¿Qué métodos de pago aceptan?</span>
+                <i class="fas fa-chevron-down" style="font-size: 14px; color: var(--accent);"></i>
+            </div>
+            <div class="faq-answer" id="t-faq-a4">
+                Actualmente aceptamos pagos seguros a través de PayPal y cuentas de Free Fire de las regiones especificadas.
+            </div>
+        </div>
+    </div>
+
+    <!-- ACCESO AL PANEL DE RESEÑAS -->
+    <div class="reviews-trigger-section" id="reviewsTriggerSection">
+        <div class="reviews-panel-trigger">
+            <h3 id="t-trigger-heading">¿YA ADQUIRISTE TU SOFTWARE?</h3>
+            <p id="t-trigger-desc">Entra a nuestro apartado exclusivo para ver las opiniones de otros clientes o dejar tu propia experiencia registrada.</p>
+            <button class="btn-premium" onclick="openReviewsPanel()" id="t-trigger-btn">ABRIR PANEL DE RESEÑAS</button>
+        </div>
+    </div>
+
+    <!-- PANEL DE RESEÑAS INDEPENDIENTE -->
+    <div class="reviews-full-panel" id="reviewsFullPanel">
+        <div class="panel-header-bar">
+            <h2 class="section-title" id="t-reviews-title" style="margin-bottom: 0; text-align: left;">PANEL DE RESEÑAS</h2>
+            <button class="btn-premium" onclick="closeReviewsPanel()" style="padding: 8px 20px; font-size: 13px;" id="t-close-panel">VOLVER</button>
+        </div>
+        
+        <div class="reviews-tabs">
+            <button class="tab-btn active" onclick="switchTab('view')" id="t-tab-view">Ver Reseñas</button>
+            <button class="tab-btn" onclick="switchTab('form')" id="t-tab-form">Dejar mi Opinión</button>
+        </div>
+
+        <div id="tabView" class="tab-content active">
+            <div class="reviews-grid" id="reviewsContainer">
+                <div class="review-card">
+                    <div class="review-header">
+                        <span class="review-user">Zack_99</span>
+                        <div class="review-stars">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="review-text" id="t-rev-1">"Compré el Bypass de 30 días y la verdad va increíble, cero lag y la entrega por Discord fue rapidísima. ¡100% recomendado!"</p>
+                    <span class="review-tag" id="t-tag-rev-1">Bypass (30 Days)</span>
+                </div>
+
+                <div class="review-card">
+                    <div class="review-header">
+                        <span class="review-user">GhostXIT</span>
+                        <div class="review-stars">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="review-text" id="t-rev-2">"Excelente atención. Les pagué con una cuenta de Free Fire de región Sur y todo legal sin problemas. Muy confiables."</p>
+                    <span class="review-tag" id="t-tag-rev-2">BR Mods (15 Days)</span>
+                </div>
+
+                <div class="review-card">
+                    <div class="review-header">
+                        <span class="review-user">NexoPro</span>
+                        <div class="review-stars">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="review-text" id="t-rev-3">"El mejor software que he probado, rendimiento estable y nunca falla. La mejor inversión que he hecho para optimizar."</p>
+                    <span class="review-tag" id="t-tag-rev-3">Akashi Basic</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="tabForm" class="tab-content">
+            <div class="review-form-box">
+                <h3 id="t-form-heading">DEJA TU OPINIÓN</h3>
+                
+                <div class="star-rating" id="starRating">
+                    <i class="fas fa-star active" data-value="1" onclick="setRating(1)"></i>
+                    <i class="fas fa-star active" data-value="2" onclick="setRating(2)"></i>
+                    <i class="fas fa-star active" data-value="3" onclick="setRating(3)"></i>
+                    <i class="fas fa-star active" data-value="4" onclick="setRating(4)"></i>
+                    <i class="fas fa-star active" data-value="5" onclick="setRating(5)"></i>
+                </div>
+
+                <div class="form-group">
+                    <label id="t-label-name" for="reviewName">Tu Nombre o Usuario</label>
+                    <input type="text" id="reviewName" class="form-control" placeholder="Ej. ProPlayer123">
+                </div>
+
+                <div class="form-group">
+                    <label id="t-label-product" for="reviewProduct">Producto Adquirido</label>
+                    <select id="reviewProduct" class="form-control">
+                        <option value="Bypass">Bypass</option>
+                        <option value="BR Mods">BR Mods</option>
+                        <option value="Akashi Basic">Akashi Basic</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label id="t-label-msg" for="reviewComment">Tu Mensaje / Reseña</label>
+                    <textarea id="reviewComment" class="form-control" placeholder="Escribe tu experiencia aquí..."></textarea>
+                </div>
+
+                <button class="btn-premium" style="width: 100%;" onclick="enviarReseña()" id="t-submit-btn">ENVIAR RESEÑA</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE PAGO -->
+    <div id="paymentModal">
+        <div class="modal-content">
+            <h2 id="t-modal-title" style="color: var(--accent); margin-bottom: 15px; font-family: 'Rajdhani'; font-size: 24px;">¿ESTÁS SEGURO?</h2>
+            <p id="t-modal-desc" style="margin-bottom: 25px; color: #aaa; font-size: 13px;">Estás a punto de proceder al pago. Asegúrate de tener los fondos listos en PayPal.</p>
+            <button class="btn-premium" onclick="window.location.href='https://www.paypal.me/GabrielMarte152'" style="width: 100%; margin-bottom: 10px;" id="t-modal-yes">SÍ, PAGAR</button>
+            <button class="btn-premium" onclick="hideModal()" style="width: 100%; border-color: #444; color: #666;" id="t-modal-cancel">CANCELAR</button>
+        </div>
+    </div>
+
+    <!-- MODAL DEL PANEL DE ADMINISTRACIÓN PRIVADO -->
+    <div id="adminModal">
+        <div class="admin-box" id="adminLoginView">
+            <h2 id="t-admin-login-title">ACCESO ADMINISTRADOR</h2>
+            <p id="t-admin-login-desc" style="color: #aaa; font-size: 12px; margin-bottom: 20px;">Introduce tus credenciales secretas para gestionar el estado de los productos.</p>
+            <div class="form-group">
+                <label id="t-admin-user-label">Usuario</label>
+                <input type="text" id="adminUser" class="form-control" placeholder="Usuario admin">
+            </div>
+            <div class="form-group">
+                <label id="t-admin-pass-label">Contraseña</label>
+                <input type="password" id="adminPass" class="form-control" placeholder="Contraseña">
+            </div>
+            <button class="btn-premium" style="width: 100%; margin-top: 10px;" onclick="verificarLogin()" id="t-admin-login-btn">ENTRAR AL PANEL</button>
+            <button class="btn-premium" style="width: 100%; margin-top: 10px; border-color: #444; color: #777;" onclick="cerrarAdminModal()" id="t-admin-cancel-btn">CANCELAR</button>
+        </div>
+
+        <div class="admin-box" id="adminControlView" style="display: none; max-width: 600px;">
+            <h2 id="t-admin-panel-title">PANEL DE CONTROL AKASHI</h2>
+            <p id="t-admin-panel-desc" style="color: #aaa; font-size: 12px; margin-bottom: 20px;">Modifica el estado de cada producto. Al guardar, se actualizará la web y se enviará un reporte automático a tu Discord.</p>
+            
+            <div class="admin-product-row">
+                <span>BYPASS</span>
+                <select id="select-bypass" class="admin-select">
+                    <option value="ONLINE">ONLINE</option>
+                    <option value="MAINTENANCE">MAINTENANCE</option>
+                    <option value="OFFLINE">OFFLINE</option>
+                </select>
+            </div>
+
+            <div class="admin-product-row">
+                <span>BR MODS</span>
+                <select id="select-brmods" class="admin-select">
+                    <option value="ONLINE">ONLINE</option>
+                    <option value="MAINTENANCE">MAINTENANCE</option>
+                    <option value="OFFLINE">OFFLINE</option>
+                </select>
+            </div>
+
+            <div class="admin-product-row">
+                <span>AKASHI BASIC</span>
+                <select id="select-basic" class="admin-select">
+                    <option value="ONLINE">ONLINE</option>
+                    <option value="MAINTENANCE">MAINTENANCE</option>
+                    <option value="OFFLINE">OFFLINE</option>
+                </select>
+            </div>
+
+            <button class="btn-premium" style="width: 100%; margin-top: 15px;" onclick="guardarEstadosAdmin()" id="t-admin-save-btn">GUARDAR Y NOTIFICAR A DISCORD</button>
+            <button class="btn-premium" style="width: 100%; margin-top: 10px; border-color: #444; color: #777;" onclick="cerrarAdminModal()" id="t-admin-close-btn">CERRAR PANEL</button>
+        </div>
+    </div>
+
+    <footer id="t-footer">&copy; 2026 AKASHI XIT - ELITE DEVELOPMENTS | <a href="javascript:void(0)" onclick="abrirAdminModal()">ADMIN</a></footer>
+
     <script>
-        // Deshabilitar Clic Derecho
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
+        // PROTECCIÓN CONTRA INSPECCIÓN / ROBO DE CÓDIGO BÁSICA
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'U')) {
+                e.preventDefault();
+                return false;
+            }
         });
 
-        // Deshabilitar atajos de teclado para Inspeccionar / Ver Código / Guardar
-        document.addEventListener('keydown', function(e) {
-            // F12
-            if (e.key === 'F12') {
-                e.preventDefault();
-                return false;
+        // CONFIGURACIÓN DE TUS 2 WEBHOOKS DE DISCORD
+        const WEBHOOK_ESTADOS_URL = "https://discordapp.com/api/webhooks/1535734277902311475/GIQCG-1cDsZKs2wdfyWZSvLx_h7eiet3i5Q2btodYVrHoavZq9YANGEPoNnbJtTQ2wah";
+        const WEBHOOK_RESEÑAS_URL = "https://discordapp.com/api/webhooks/1535726810736885870/1uf580jmTt9plwYi_ScgVbRnSils4A42J9PPdgOxy7WmW731V9FLJ7KnC3oyOxDmhWVp";
+
+        // CREDENCIALES SECRETAS DEL ADMIN
+        const ADMIN_USERNAME = "admin";
+        const ADMIN_PASSWORD = "akashi2026";
+
+        // Estado inicial de los productos
+        let estadosProductos = {
+            bypass: localStorage.getItem('akashi_bypass') || "ONLINE",       
+            brmods: localStorage.getItem('akashi_brmods') || "MAINTENANCE",  
+            basic: localStorage.getItem('akashi_basic') || "ONLINE"         
+        };
+
+        // Sistema de Notificaciones Elegantes Estilo Toast
+        function mostrarToast(titulo, mensaje, tipo = 'success') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+
+            let iconoClase = "fas fa-check";
+            if (tipo === 'warning') iconoClase = "fas fa-exclamation-triangle";
+            if (tipo === 'error') iconoClase = "fas fa-times-circle";
+
+            const toast = document.createElement('div');
+            toast.className = `akashi-toast ${tipo}`;
+            toast.innerHTML = `
+                <div class="akashi-toast-icon"><i class="${iconoClase}"></i></div>
+                <div class="akashi-toast-content">
+                    <h4>${titulo}</h4>
+                    <p>${mensaje}</p>
+                </div>
+            `;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 4700);
+        }
+
+        // Funciones del Modal de Galería Flotante
+        function openGalleryModal() {
+            document.getElementById('galleryModal').style.display = 'flex';
+        }
+
+        function closeGalleryModal() {
+            document.getElementById('galleryModal').style.display = 'none';
+        }
+
+        // Funciones del Lightbox (Ver imagen en grande)
+        function openLightbox(imgSrc, captionText) {
+            const modal = document.getElementById('lightboxModal');
+            const img = document.getElementById('lightboxImg');
+            const caption = document.getElementById('lightboxCaption');
+            
+            img.src = imgSrc;
+            caption.innerText = captionText;
+            modal.style.display = 'flex';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightboxModal').style.display = 'none';
+        }
+
+        function aplicarEstadosVisuales() {
+            aplicarEstadoIndividual('status-bypass', estadosProductos.bypass);
+            aplicarEstadoIndividual('status-brmods', estadosProductos.brmods);
+            aplicarEstadoIndividual('status-basic', estadosProductos.basic);
+            
+            const globalEl = document.getElementById('nav-global-status');
+            if (estadosProductos.bypass === "ONLINE" && estadosProductos.brmods === "ONLINE" && estadosProductos.basic === "ONLINE") {
+                globalEl.innerText = "ONLINE";
+                globalEl.style.color = "#00ff6a";
+            } else {
+                globalEl.innerText = "UPDATED";
+                globalEl.style.color = "#ffaa00";
             }
-            // Ctrl + Shift + I / J / C (Herramientas de desarrollador)
-            if (e.ctrlKey && e.shiftKey && ['I', 'i', 'J', 'j', 'C', 'c'].includes(e.key)) {
-                e.preventDefault();
-                return false;
+        }
+
+        function aplicarEstadoIndividual(id, estado) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.innerText = estado;
+            if (estado === "ONLINE") {
+                el.style.color = "#00ff6a";
+            } else if (estado === "MAINTENANCE") {
+                el.style.color = "#ffaa00";
+            } else {
+                el.style.color = "#ff3333";
             }
-            // Ctrl + U (Ver código fuente)
-            if (e.ctrlKey && ['u', 'U'].includes(e.key)) {
-                e.preventDefault();
-                return false;
-            }
-            // Ctrl + S (Guardar página)
-            if (e.ctrlKey && ['s', 'S'].includes(e.key)) {
-                e.preventDefault();
-                return false;
+        }
+
+        aplicarEstadosVisuales();
+
+        // LÓGICA DEL PANEL ADMIN
+        window.addEventListener('hashchange', () => {
+            if (window.location.hash === '#admin') {
+                abrirAdminModal();
             }
         });
+
+        if (window.location.hash === '#admin') {
+            abrirAdminModal();
+        }
+
+        function abrirAdminModal() {
+            document.getElementById('adminModal').style.display = 'flex';
+            if (sessionStorage.getItem('akashi_logged') === 'true') {
+                mostrarPanelControl();
+            } else {
+                document.getElementById('adminLoginView').style.display = 'block';
+                document.getElementById('adminControlView').style.display = 'none';
+            }
+        }
+
+        function cerrarAdminModal() {
+            document.getElementById('adminModal').style.display = 'none';
+            if (window.location.hash === '#admin') {
+                history.pushState("", document.title, window.location.pathname + window.location.search);
+            }
+        }
+
+        function verificarLogin() {
+            const u = document.getElementById('adminUser').value;
+            const p = document.getElementById('adminPass').value;
+
+            if (u === ADMIN_USERNAME && p === ADMIN_PASSWORD) {
+                sessionStorage.setItem('akashi_logged', 'true');
+                mostrarPanelControl();
+                mostrarToast(currentLang === 'es' ? "Acceso Concedido" : "Access Granted", currentLang === 'es' ? "Bienvenido al panel de administración." : "Welcome to the administration panel.", "success");
+            } else {
+                mostrarToast(currentLang === 'es' ? "Acceso Denegado" : "Access Denied", currentLang === 'es' ? "Credenciales de administrador incorrectas." : "Incorrect administrator credentials.", "error");
+            }
+        }
+
+        function mostrarPanelControl() {
+            document.getElementById('adminLoginView').style.display = 'none';
+            document.getElementById('adminControlView').style.display = 'block';
+
+            document.getElementById('select-bypass').value = estadosProductos.bypass;
+            document.getElementById('select-brmods').value = estadosProductos.brmods;
+            document.getElementById('select-basic').value = estadosProductos.basic;
+        }
+
+        function guardarEstadosAdmin() {
+            estadosProductos.bypass = document.getElementById('select-bypass').value;
+            estadosProductos.brmods = document.getElementById('select-brmods').value;
+            estadosProductos.basic = document.getElementById('select-basic').value;
+
+            localStorage.setItem('akashi_bypass', estadosProductos.bypass);
+            localStorage.setItem('akashi_brmods', estadosProductos.brmods);
+            localStorage.setItem('akashi_basic', estadosProductos.basic);
+
+            aplicarEstadosVisuales();
+            enviarWebhookEstados(estadosProductos);
+
+            mostrarToast(currentLang === 'es' ? "Estados Actualizados" : "Status Updated", currentLang === 'es' ? "Se actualizaron los servidores y se envió el reporte a Discord." : "Servers updated and report sent to Discord.", "success");
+            cerrarAdminModal();
+        }
+
+        function enviarWebhookEstados(estados) {
+            if (!WEBHOOK_ESTADOS_URL || WEBHOOK_ESTADOS_URL === "URL_CANAL_ESTADOS_AQUI") {
+                console.log("Webhook de estados no configurado.");
+                return;
+            }
+
+            const discordPayload = {
+                username: "Akashi XIT - Server Status",
+                avatar_url: "https://i.imgur.com/3Z50Y4J.png",
+                embeds: [{
+                    title: "🔄 Actualización de Estado de Servidores",
+                    description: "El administrador ha actualizado el estado de los software oficiales en la plataforma.",
+                    color: 9017314,
+                    fields: [
+                        { name: "🛡️ Bypass", value: `**${estados.bypass}**`, inline: true },
+                        { name: "⚡ BR Mods", value: `**${estados.brmods}**`, inline: true },
+                        { name: "💎 Akashi Basic", value: `**${estados.basic}**`, inline: true }
+                    ],
+                    footer: { text: "Akashi XIT Security System • 2026" },
+                    timestamp: new Date().toISOString()
+                }]
+            };
+
+            fetch(WEBHOOK_ESTADOS_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(discordPayload)
+            }).catch(err => console.log("Error enviando webhook de estados:", err));
+        }
+
+        function openReviewsPanel() {
+            document.getElementById('reviewsTriggerSection').style.display = 'none';
+            document.getElementById('reviewsFullPanel').classList.add('active');
+            window.scrollTo({ top: document.getElementById('reviewsFullPanel').offsetTop - 50, behavior: 'smooth' });
+        }
+
+        function closeReviewsPanel() {
+            document.getElementById('reviewsFullPanel').classList.remove('active');
+            document.getElementById('reviewsTriggerSection').style.display = 'block';
+            window.scrollTo({ top: document.getElementById('reviewsTriggerSection').offsetTop - 200, behavior: 'smooth' });
+        }
+
+        function switchTab(tabName) {
+            const tabView = document.getElementById('tabView');
+            const tabForm = document.getElementById('tabForm');
+            const btnView = document.getElementById('t-tab-view');
+            const btnForm = document.getElementById('t-tab-form');
+
+            if (tabName === 'view') {
+                tabView.classList.add('active');
+                tabForm.classList.remove('active');
+                btnView.classList.add('active');
+                btnForm.classList.remove('active');
+            } else {
+                tabForm.classList.add('active');
+                tabView.classList.remove('active');
+                btnForm.classList.add('active');
+                btnView.classList.remove('active');
+            }
+        }
+
+        let currentRating = 5;
+        function setRating(rating) {
+            currentRating = rating;
+            const stars = document.querySelectorAll('#starRating .fa-star');
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        function enviarReseña() {
+            const name = document.getElementById('reviewName').value.trim();
+            const product = document.getElementById('reviewProduct').value;
+            const comment = document.getElementById('reviewComment').value.trim();
+
+            if (!name || !comment) {
+                mostrarToast(currentLang === 'es' ? "Campos Incompletos" : "Incomplete Fields", currentLang === 'es' ? "Por favor completa tu nombre y tu comentario." : "Please fill out your name and comment.", "warning");
+                return;
+            }
+
+            let starsHtml = '';
+            for (let i = 0; i < currentRating; i++) {
+                starsHtml += '<i class="fas fa-star"></i>';
+            }
+
+            const container = document.getElementById('reviewsContainer');
+            const newCard = document.createElement('div');
+            newCard.className = 'review-card';
+            newCard.innerHTML = `
+                <div class="review-header">
+                    <span class="review-user">${escapeHtml(name)}</span>
+                    <div class="review-stars">${starsHtml}</div>
+                </div>
+                <p class="review-text">"${escapeHtml(comment)}"</p>
+                <span class="review-tag">${escapeHtml(product)}</span>
+            `;
+            container.prepend(newCard);
+
+            if (WEBHOOK_RESEÑAS_URL && WEBHOOK_RESEÑAS_URL !== "URL_CANAL_RESEÑAS_AQUI") {
+                const discordPayload = {
+                    username: "Akashi XIT - Reviews",
+                    avatar_url: "https://i.imgur.com/3Z50Y4J.png",
+                    embeds: [{
+                        title: "⭐ ¡Nueva Reseña Recibida desde la Web!",
+                        color: 16766720,
+                        fields: [
+                            { name: "👤 Usuario", value: name, inline: true },
+                            { name: "📦 Producto", value: product, inline: true },
+                            { name: "🌟 Calificación", value: "⭐".repeat(currentRating), inline: true },
+                            { name: "💬 Comentario", value: `\`\`\`${comment}\`\`\``, inline: false }
+                        ],
+                        footer: { text: "Akashi XIT Web System • 2026" },
+                        timestamp: new Date().toISOString()
+                    }]
+                };
+
+                fetch(WEBHOOK_RESEÑAS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(discordPayload)
+                }).catch(err => console.log("Error enviando webhook de reseñas:", err));
+            }
+
+            document.getElementById('reviewName').value = '';
+            document.getElementById('reviewComment').value = '';
+            setRating(5);
+            switchTab('view');
+            
+            mostrarToast(currentLang === 'es' ? "¡Reseña Publicada!" : "Review Published!", currentLang === 'es' ? "Tu opinión ha sido registrada con éxito y enviada a Discord." : "Your review has been successfully published and sent to Discord.", "success");
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        function toggleFaq(element) {
+            const answer = element.nextElementSibling;
+            const icon = element.querySelector('i');
+            
+            if (answer.style.display === "block") {
+                answer.style.display = "none";
+                icon.style.transform = "rotate(0deg)";
+            } else {
+                answer.style.display = "block";
+                icon.style.transform = "rotate(180deg)";
+            }
+        }
+
+        const buyers = ["Alex_99", "Kratos_X", "DarkSider", "User_772", "Ghost_Cheat", "Nexo_Pro", "Alpha99", "Vortex_Z"];
+        const productsList = ["Bypass (30 Days)", "BR Mods (15 Days)", "Akashi Basic (7 Days)", "Bypass (7 Days)"];
+
+        function showRandomToast() {
+            const container = document.getElementById('toast-container');
+            const randomBuyer = buyers[Math.floor(Math.random() * buyers.length)];
+            const randomProduct = productsList[Math.floor(Math.random() * productsList.length)];
+
+            const toast = document.createElement('div');
+            toast.className = 'akashi-toast success';
+            toast.innerHTML = `
+                <div class="akashi-toast-icon"><i class="fas fa-shopping-cart"></i></div>
+                <div class="akashi-toast-content">
+                    <h4>${randomBuyer}</h4>
+                    <p>${currentLang === 'es' ? 'Adquirió' : 'Acquired'} ${randomProduct}</p>
+                </div>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 5000);
+        }
+
+        setInterval(showRandomToast, 8000);
+
+        let currentLang = 'es';
+        const translations = {
+            es: {
+                statusLabel: "STATUS",
+                heroDesc: "Software de optimización de alto rendimiento. Privado y estable.",
+                sectionTitle: "PRODUCTOS ELITES",
+                portfolioTitle: "GALERÍA DE OPERACIÓN",
+                closeGallery: "CERRAR",
+                tag1: "Bypass Elite",
+                tag2: "Software Interface",
+                tag3: "BR Mods",
+                port1Title: "Bypass en Juego",
+                port1Desc: "Visualización de estabilidad y rendimiento óptimo en partida con cero lag.",
+                port2Title: "Akashi Basic",
+                port2Desc: "Diseño limpio, futurista y fácil de usar para activar tus llaves al instante.",
+                port3Title: "BR Mods",
+                port3Desc: "Herramientas avanzadas configuradas para ofrecer la máxima fluidez.",
+                days7: "7 DAYS",
+                days15: "15 DAYS",
+                days30: "30 DAYS",
+                buyBtn: "PAYPAL",
+                guideTitle: "¿CÓMO COMPRAR?",
+                step1Title: "Elige tu Software",
+                step1Desc: "Selecciona el paquete que mejor se adapte a tus necesidades (Bypass, BR Mods o Akashi Basic) y el tiempo de duración deseado.",
+                step2Title: "Realiza el Pago",
+                step2Desc: "Haz clic en el botón de PayPal para procesar tu pago de forma segura o contáctanos si deseas pagar con cuentas de Free Fire válidas.",
+                step3Title: "Recibe tu Llave",
+                step3Desc: "Envía tu comprobante de pago por nuestro canal de Discord y recibe tu clave de acceso junto con el ejecutable en cuestión de minutos.",
+                faqTitle: "PREGUNTAS FRECUENTES",
+                q1: "¿Cuánto tarda en llegar la llave?",
+                a1: "La entrega es completamente automatizada/semi-automatizada al instante. Una vez realizado el pago, envías tu comprobante por nuestro Discord y se te entrega tu llave en cuestión de minutos.",
+                q2: "¿Cómo se activa el producto?",
+                a2: "Recibirás un archivo ejecutable junto con una clave de acceso única. Solo debes abrir el software, introducir la llave que se te proporcionó y pulsar activar.",
+                q3: "¿Aceptan cuentas de Free Fire como método de pago?",
+                a3: "¡Sí! También se aceptan cuentas de Free Fire de región Norte, EEUU y Sur. Consulta con nosotros mediante Discord para realizar el intercambio o validación de la cuenta.",
+                q4: "¿Qué métodos de pago aceptan?",
+                a4: "Actualmente aceptamos pagos seguros a través de PayPal y cuentas de Free Fire de las regiones especificadas.",
+                triggerHeading: "¿YA ADQUIRISTE TU SOFTWARE?",
+                triggerDesc: "Entra a nuestro apartado exclusivo para ver las opiniones de otros clientes o dejar tu propia experiencia registrada.",
+                triggerBtn: "ABRIR PANEL DE RESEÑAS",
+                reviewsTitle: "PANEL DE RESEÑAS",
+                closePanel: "VOLVER",
+                tabView: "Ver Reseñas",
+                tabForm: "Dejar mi Opinión",
+                rev1: '"Compré el Bypass de 30 días y la verdad va increíble, cero lag y la entrega por Discord fue rapidísima. ¡100% recomendado!"',
+                rev2: '"Excelente atención. Les pagué con una cuenta de Free Fire de región Sur y todo legal sin problemas. Muy confiables."',
+                rev3: '"El mejor software que he probado, rendimiento estable y nunca falla. La mejor inversión que he hecho para optimizar."',
+                tagRev1: "Bypass (30 Days)",
+                tagRev2: "BR Mods (15 Days)",
+                tagRev3: "Akashi Basic",
+                formHeading: "DEJA TU OPINIÓN",
+                labelName: "Tu Nombre o Usuario",
+                labelProduct: "Producto Adquirido",
+                labelMsg: "Tu Mensaje / Reseña",
+                submitBtn: "ENVIAR RESEÑA",
+                modalTitle: "¿ESTÁS SEGURO?",
+                modalDesc: "Estás a punto de proceder al pago. Asegúrate de tener los fondos listos en PayPal.",
+                modalYes: "SÍ, PAGAR",
+                modalCancel: "CANCELAR",
+                adminLoginTitle: "ACCESO ADMINISTRADOR",
+                adminLoginDesc: "Introduce tus credenciales secretas para gestionar el estado de los productos.",
+                adminUserLabel: "Usuario",
+                adminPassLabel: "Contraseña",
+                adminLoginBtn: "ENTRAR AL PANEL",
+                adminCancelBtn: "CANCELAR",
+                adminPanelTitle: "PANEL DE CONTROL AKASHI",
+                adminPanelDesc: "Modifica el estado de cada producto. Al guardar, se actualizará la web y se enviará un reporte automático a tu Discord.",
+                adminSaveBtn: "GUARDAR Y NOTIFICAR A DISCORD",
+                adminCloseBtn: "CERRAR PANEL",
+                footer: '&copy; 2026 AKASHI XIT - ELITE DEVELOPMENTS | <a href="javascript:void(0)" onclick="abrirAdminModal()">ADMIN</a>',
+                btnGaleria: '<i class="fas fa-images"></i> Galería'
+            },
+            en: {
+                statusLabel: "STATUS",
+                heroDesc: "High-performance optimization software. Private and stable.",
+                sectionTitle: "ELITE PRODUCTS",
+                portfolioTitle: "OPERATION GALLERY",
+                closeGallery: "CLOSE",
+                tag1: "Elite Bypass",
+                tag2: "Software Interface",
+                tag3: "BR Mods",
+                port1Title: "Bypass In-Game",
+                port1Desc: "Visualization of stability and optimal performance in-game with zero lag.",
+                port2Title: "Akashi Basic",
+                port2Desc: "Clean, futuristic, and user-friendly design to activate your keys instantly.",
+                port3Title: "BR Mods",
+                port3Desc: "Advanced tools configured to deliver maximum smoothness.",
+                days7: "7 DAYS",
+                days15: "15 DAYS",
+                days30: "30 DAYS",
+                buyBtn: "PAYPAL",
+                guideTitle: "HOW TO BUY?",
+                step1Title: "Choose Your Software",
+                step1Desc: "Select the package that best fits your needs (Bypass, BR Mods, or Akashi Basic) and your desired duration.",
+                step2Title: "Make the Payment",
+                step2Desc: "Click the PayPal button to securely process your payment or contact us if you prefer paying with valid Free Fire accounts.",
+                step3Title: "Receive Your Key",
+                step3Desc: "Send your payment receipt through our Discord channel and get your access key along with the executable in minutes.",
+                faqTitle: "FREQUENTLY ASKED QUESTIONS",
+                q1: "How long does it take to get the key?",
+                a1: "Delivery is instant and automated. Once payment is made, send your receipt via our Discord and your key will be delivered in minutes.",
+                q2: "How do I activate the product?",
+                a2: "You will receive an executable file along with a unique access key. Just open the software, enter the provided key, and click activate.",
+                q3: "Do you accept Free Fire accounts as payment?",
+                a3: "Yes! Free Fire accounts from North, USA, and South regions are also accepted. Contact us via Discord to arrange the trade or account verification.",
+                q4: "What payment methods do you accept?",
+                a4: "We currently accept secure payments through PayPal and Free Fire accounts from the specified regions.",
+                triggerHeading: "ALREADY PURCHASED YOUR SOFTWARE?",
+                triggerDesc: "Enter our exclusive section to check reviews from other clients or submit your own experience.",
+                triggerBtn: "OPEN REVIEWS PANEL",
+                reviewsTitle: "REVIEWS PANEL",
+                closePanel: "BACK",
+                tabView: "View Reviews",
+                tabForm: "Leave a Review",
+                rev1: '"I bought the 30-day Bypass and it works amazingly, zero lag and Discord delivery was super fast. 100% recommended!"',
+                rev2: '"Great support. I paid with a South region Free Fire account, completely safe and smooth. Very trustworthy."',
+                rev3: '"The best software I have ever tried, stable performance and never fails. The best investment I have made for optimizing."',
+                tagRev1: "Bypass (30 Days)",
+                tagRev2: "BR Mods (15 Days)",
+                tagRev3: "Akashi Basic",
+                formHeading: "LEAVE YOUR REVIEW",
+                labelName: "Your Name or Username",
+                labelProduct: "Purchased Product",
+                labelMsg: "Your Message / Review",
+                submitBtn: "SUBMIT REVIEW",
+                modalTitle: "ARE YOU SURE?",
+                modalDesc: "You are about to proceed to payment. Make sure you have your funds ready on PayPal.",
+                modalYes: "YES, PAY",
+                modalCancel: "CANCEL",
+                adminLoginTitle: "ADMINISTRATOR ACCESS",
+                adminLoginDesc: "Enter your secret credentials to manage product status.",
+                adminUserLabel: "Username",
+                adminPassLabel: "Password",
+                adminLoginBtn: "ENTER PANEL",
+                adminCancelBtn: "CANCEL",
+                adminPanelTitle: "AKASHI CONTROL PANEL",
+                adminPanelDesc: "Modify each product's status. Saving will update the website and send an automatic report to your Discord.",
+                adminSaveBtn: "SAVE AND NOTIFY DISCORD",
+                adminCloseBtn: "CLOSE PANEL",
+                footer: '&copy; 2026 AKASHI XIT - ELITE DEVELOPMENTS | <a href="javascript:void(0)" onclick="abrirAdminModal()">ADMIN</a>',
+                btnGaleria: '<i class="fas fa-images"></i> Gallery'
+            }
+        };
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'es' ? 'en' : 'es';
+            document.getElementById('langToggleBtn').innerText = currentLang === 'es' ? 'EN' : 'ES';
+            
+            document.getElementById('t-status-label').innerText = translations[currentLang].statusLabel;
+            document.getElementById('t-hero-desc').innerText = translations[currentLang].heroDesc;
+            document.getElementById('t-section-title').innerText = translations[currentLang].sectionTitle;
+            document.getElementById('t-portfolio-title').innerText = translations[currentLang].portfolioTitle;
+            document.getElementById('t-close-gallery').innerText = translations[currentLang].closeGallery;
+            document.getElementById('t-tag-1').innerText = translations[currentLang].tag1;
+            document.getElementById('t-tag-2').innerText = translations[currentLang].tag2;
+            document.getElementById('t-tag-3').innerText = translations[currentLang].tag3;
+            document.getElementById('t-port-1-title').innerText = translations[currentLang].port1Title;
+            document.getElementById('t-port-1-desc').innerText = translations[currentLang].port1Desc;
+            document.getElementById('t-port-2-title').innerText = translations[currentLang].port2Title;
+            document.getElementById('t-port-2-desc').innerText = translations[currentLang].port2Desc;
+            document.getElementById('t-port-3-title').innerText = translations[currentLang].port3Title;
+            document.getElementById('t-port-3-desc').innerText = translations[currentLang].port3Desc;
+            
+            // Días de precios
+            for(let i=1; i<=3; i++) {
+                document.getElementById(`t-days-7-${i}`).innerText = translations[currentLang].days7;
+                document.getElementById(`t-days-15-${i}`).innerText = translations[currentLang].days15;
+                document.getElementById(`t-days-30-${i}`).innerText = translations[currentLang].days30;
+            }
+
+            document.getElementById('t-guide-title').innerText = translations[currentLang].guideTitle;
+            document.getElementById('t-step1-title').innerText = translations[currentLang].step1Title;
+            document.getElementById('t-step1-desc').innerText = translations[currentLang].step1Desc;
+            document.getElementById('t-step2-title').innerText = translations[currentLang].step2Title;
+            document.getElementById('t-step2-desc').innerText = translations[currentLang].step2Desc;
+            document.getElementById('t-step3-title').innerText = translations[currentLang].step3Title;
+            document.getElementById('t-step3-desc').innerText = translations[currentLang].step3Desc;
+            document.getElementById('t-faq-title').innerText = translations[currentLang].faqTitle;
+            document.getElementById('t-faq-q1').innerText = translations[currentLang].q1;
+            document.getElementById('t-faq-a1').innerText = translations[currentLang].a1;
+            document.getElementById('t-faq-q2').innerText = translations[currentLang].q2;
+            document.getElementById('t-faq-a2').innerText = translations[currentLang].a2;
+            document.getElementById('t-faq-q3').innerText = translations[currentLang].q3;
+            document.getElementById('t-faq-a3').innerText = translations[currentLang].a3;
+            document.getElementById('t-faq-q4').innerText = translations[currentLang].q4;
+            document.getElementById('t-faq-a4').innerText = translations[currentLang].a4;
+            document.getElementById('t-trigger-heading').innerText = translations[currentLang].triggerHeading;
+            document.getElementById('t-trigger-desc').innerText = translations[currentLang].triggerDesc;
+            document.getElementById('t-trigger-btn').innerText = translations[currentLang].triggerBtn;
+            document.getElementById('t-reviews-title').innerText = translations[currentLang].reviewsTitle;
+            document.getElementById('t-close-panel').innerText = translations[currentLang].closePanel;
+            document.getElementById('t-tab-view').innerText = translations[currentLang].tabView;
+            document.getElementById('t-tab-form').innerText = translations[currentLang].tabForm;
+            document.getElementById('t-rev-1').innerText = translations[currentLang].rev1;
+            document.getElementById('t-rev-2').innerText = translations[currentLang].rev2;
+            document.getElementById('t-rev-3').innerText = translations[currentLang].rev3;
+            document.getElementById('t-tag-rev-1').innerText = translations[currentLang].tagRev1;
+            document.getElementById('t-tag-rev-2').innerText = translations[currentLang].tagRev2;
+            document.getElementById('t-tag-rev-3').innerText = translations[currentLang].tagRev3;
+            document.getElementById('t-form-heading').innerText = translations[currentLang].formHeading;
+            document.getElementById('t-label-name').innerText = translations[currentLang].labelName;
+            document.getElementById('t-label-product').innerText = translations[currentLang].labelProduct;
+            document.getElementById('t-label-msg').innerText = translations[currentLang].labelMsg;
+            document.getElementById('t-submit-btn').innerText = translations[currentLang].submitBtn;
+            document.getElementById('t-modal-title').innerText = translations[currentLang].modalTitle;
+            document.getElementById('t-modal-desc').innerText = translations[currentLang].modalDesc;
+            document.getElementById('t-modal-yes').innerText = translations[currentLang].modalYes;
+            document.getElementById('t-modal-cancel').innerText = translations[currentLang].modalCancel;
+            
+            // Admin Modal translations
+            document.getElementById('t-admin-login-title').innerText = translations[currentLang].adminLoginTitle;
+            document.getElementById('t-admin-login-desc').innerText = translations[currentLang].adminLoginDesc;
+            document.getElementById('t-admin-user-label').innerText = translations[currentLang].adminUserLabel;
+            document.getElementById('t-admin-pass-label').innerText = translations[currentLang].adminPassLabel;
+            document.getElementById('t-admin-login-btn').innerText = translations[currentLang].adminLoginBtn;
+            document.getElementById('t-admin-cancel-btn').innerText = translations[currentLang].adminCancelBtn;
+            document.getElementById('t-admin-panel-title').innerText = translations[currentLang].adminPanelTitle;
+            document.getElementById('t-admin-panel-desc').innerText = translations[currentLang].adminPanelDesc;
+            document.getElementById('t-admin-save-btn').innerText = translations[currentLang].adminSaveBtn;
+            document.getElementById('t-admin-close-btn').innerText = translations[currentLang].adminCloseBtn;
+
+            document.getElementById('t-footer').innerHTML = translations[currentLang].footer;
+            document.getElementById('t-btn-galeria').innerHTML = translations[currentLang].btnGaleria;
+
+            const buyButtons = document.querySelectorAll('.btn-buy');
+            buyButtons.forEach(btn => { btn.innerText = translations[currentLang].buyBtn; });
+        }
+
+        function showModal() { document.getElementById('paymentModal').style.display = 'flex'; }
+        function hideModal() { document.getElementById('paymentModal').style.display = 'none'; }
     </script>
 </body>
 </html>
